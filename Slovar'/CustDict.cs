@@ -41,23 +41,17 @@ namespace Slovar_
             {
                 int tempHash = key.GetHashCode();
                 int index = ((tempHash % HashTable.Length) + HashTable.Length) % HashTable.Length;
-                Entry temp = new Entry();
-                bool need = false;
-                foreach (Entry i in HashTable[index])
+                Entry temp = new Entry { hashCode = tempHash, key = key, value = value };
+                var current = HashTable[index].First;
+                while (true)
                 {
-                    if (i.key.Equals(key))
+                    if (current.Value.key.Equals(key))
                     {
-                        temp = i;
-                        need = true;
-                        break;
+                        current.Value = temp;
+                        return;
                     }
                 }
-                if (!need)
-                {
-                    throw new Exception($"Key {key} not found");
-                }
-                HashTable[index].Remove(temp);
-                HashTable[index].AddLast(new Entry { hashCode = tempHash, key = key, value = value });
+                Add(key, value);
             }
         }
 
