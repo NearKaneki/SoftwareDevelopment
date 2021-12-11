@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Slovar_
 {
@@ -43,12 +41,15 @@ namespace Slovar_
                 int index = ((tempHash % HashTable.Length) + HashTable.Length) % HashTable.Length;
                 Entry temp = new Entry { hashCode = tempHash, key = key, value = value };
                 var current = HashTable[index].First;
-                while (true)
+                if (HashTable[index].Any(x => x.key.Equals(key)))
                 {
-                    if (current.Value.key.Equals(key))
+                    while (true)
                     {
-                        current.Value = temp;
-                        return;
+                        if (current.Value.key.Equals(key))
+                        {
+                            current.Value = temp;
+                            return;
+                        }
                     }
                 }
                 Add(key, value);
@@ -140,23 +141,14 @@ namespace Slovar_
             int tempHash = item.Key.GetHashCode();
             int index = ((tempHash % HashTable.Length) + HashTable.Length) % HashTable.Length;
             Entry temp = new Entry { hashCode = tempHash, key = item.Key, value = item.Value };
-            if (HashTable[index].Contains(temp))
-            {
-                return true;
-            }
-            return false;
-
+            return HashTable[index].Contains(temp);
         }
 
         public bool ContainsKey(Tkey key)
         {
             int tempHash = key.GetHashCode();
             int index = ((tempHash % HashTable.Length) + HashTable.Length) % HashTable.Length;
-            if (HashTable[index].Any(x => x.key.Equals(key)))
-            {
-                return true;
-            }
-            return false;
+            return HashTable[index].Any(x => x.key.Equals(key));
         }
 
         public void CopyTo(KeyValuePair<Tkey, Tvalue>[] array, int arrayIndex)
@@ -197,8 +189,7 @@ namespace Slovar_
                         break;
                     }
                 }
-                HashTable[index].Remove(temp);
-                return true;
+                return HashTable[index].Remove(temp);
             }
             return false;
         }
@@ -210,8 +201,7 @@ namespace Slovar_
             Entry temp = new Entry { hashCode = tempHash, key = item.Key, value = item.Value };
             if (HashTable[index].Contains(temp))
             {
-                HashTable[index].Remove(temp);
-                return true;
+                return HashTable[index].Remove(temp);
             }
             return false;
         }
