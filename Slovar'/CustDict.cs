@@ -40,16 +40,12 @@ namespace Slovar_
                 int tempHash = key.GetHashCode();
                 int index = ((tempHash % HashTable.Length) + HashTable.Length) % HashTable.Length;
                 Entry temp = new Entry { hashCode = tempHash, key = key, value = value };
-                var current = HashTable[index].First;
-                if (HashTable[index].Any(x => x.key.Equals(key)))
+                for (var current = HashTable[index].First; !current.Equals(HashTable[index].Last); current = current.Next)
                 {
-                    while (true)
+                    if (current.Value.key.Equals(key))
                     {
-                        if (current.Value.key.Equals(key))
-                        {
-                            current.Value = temp;
-                            return;
-                        }
+                        current.Value = temp;
+                        return;
                     }
                 }
                 Add(key, value);
