@@ -19,6 +19,10 @@ namespace Slovar_
         public CustDict()
         {
             HashTable = new LinkedList<Entry>[10];
+            for (int i= 0; i < 10; ++i)
+            {
+                HashTable[i] = new LinkedList<Entry>();
+            }
         }
 
         public Tvalue this[Tkey key] {
@@ -97,18 +101,15 @@ namespace Slovar_
                 throw new ArgumentException("AddingDuplicate");
             }
             HashTable[index].AddLast(new Entry { hashCode = tempHash, key = key, value = value });
-            int countZero = 0; // HashTable.Where(x => x.Count != 0).Select(x => x).Count;
-            foreach(var list in HashTable)
-            {
-                if (list.Count == 0)
-                {
-                    ++countZero;
-                }
-            }
+            int countZero = HashTable.Count(x => x.Count == 0);
             if (HashTable[index].Count >= 5 || countZero<HashTable.Length/3)
             {
                 LinkedList<Entry>[] newHashTable = new LinkedList<Entry>[HashTable.Length * 2];
-                foreach(var list in HashTable)
+                for (int i = 0; i < newHashTable.Length; ++i)
+                {
+                    newHashTable[i] = new LinkedList<Entry>();
+                }
+                foreach (var list in HashTable)
                 {
                     foreach(var elem in list)
                     {
